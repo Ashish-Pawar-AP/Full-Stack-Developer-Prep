@@ -1,0 +1,28 @@
+### [Check if Number Has Equal Digit Count and Digit Value](https://leetcode.com/problems/check-if-number-has-equal-digit-count-and-digit-value)
+
+- Store the count of each digit in the array
+- Compare the count of each digit with the digit value
+
+```js copy
+function digitCount(num) {
+  const numCount = new Array(10).fill(0);
+
+  for (const digit of num) {
+    numCount[digit]++;
+  }
+
+  for (let idx = 0; idx < num.length; idx++) {
+    // if count of digit is not equal to digit value
+    if (numCount[idx] != num[idx]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+```
+
+##### Complexity
+
+- Time: O(n)
+- Space: O(1)

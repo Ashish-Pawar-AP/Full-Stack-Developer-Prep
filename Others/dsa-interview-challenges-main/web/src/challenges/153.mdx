@@ -1,0 +1,33 @@
+### [Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/)
+
+- Find which half is sorted and store the minimum value
+- Explore the unsorted half till completion
+
+```js copy
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findMin = function (nums) {
+  let left = 0, right = nums.length - 1, min = Infinity;
+
+  while (left <= right) {
+    const mid = left + Math.floor((right - left) / 2);
+
+    if (nums[left] <= nums[mid]) {
+      min = Math.min(min, nums[left]);
+      left = mid + 1;
+    } else {
+      min = Math.min(min, nums[mid]);
+      right = mid - 1;
+    }
+  }
+
+  return min;
+};
+```
+
+##### Complexity
+
+- Time: O(log(n))
+- Space: O(1)

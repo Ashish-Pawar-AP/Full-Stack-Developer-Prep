@@ -1,0 +1,875 @@
+# Learning
+
+If you want to use vim as you'd use VS Code, just go with VS Code.
+
+Vim works a different way, for a reason, don't try to make it VS Code.
+
+When you’re working don’t try speed all the time, slow down and see if there’s a way to accomplish what you want easier.
+
+# Tips
+
+-   Live in normal mode. Spend as little time as possible in insert mode.
+-   Avoid using plugins as much as possible.
+-   Avoid using multi-cursors, learn the built in ways.
+-   Do not hold down motion keys, it's an anti-pattern.
+
+# Version
+
+```bash
+:version
+```
+
+# Terminology
+
+```bash
+<C-a>     # CTRL + a
+<CR>      # Enter i.e. carret return
+<tab>     # Tab
+<esc>     # Escape
+<space>   # Space / Leader
+```
+
+**NOTE:** Capital letters = SHIFT + letter
+
+# Modes
+
+```bash
+Esc / <C-c> / <C-[>    # Normal (commands)    █ Thick cursor
+
+i              # Insert (editing)     │ Thin cursor
+
+v              # Visual (selection) (not used often)
+V              # Visual Line (select lines) (not used often)
+<C-v>          # Visual block (vertical) mode
+o              # Switch between start/end of selection to expand.
+```
+
+# Normal mode
+
+```bash
+:           # Command
+.           # Repeat last command
+
+u           # UNDO
+<C-r>       # REDO
+
+zz          # Recenter screen (NEVER USE, it interferes with ZZ i.e. saving)
+```
+
+# Commands
+
+```bash
+:<command> <tab>  # Show available command options (<C-d> also works)
+
+:h <command>      # Manual
+:set <option>     # Set an option
+:colorscheme      # Pick a colorscheme
+
+:g/               # Run an operation on every line that matches a pattern
+:g/var/d          # Delete all lines containing "var".
+```
+
+Commands can be executed over selections with `!`.
+
+```bash
+:'<'> ! sort | uniq
+
+# :        Command prompt
+# '<'>     Represent the selection
+# !        Tells that a command is to be run
+# sort     Command for sorting
+# |        Pipe
+# uniq     Command for filtering
+```
+
+# Save
+
+```bash
+:w     # Save
+:wa    # Save all
+```
+
+# Exit
+
+```bash
+:q     # Quit
+:wq    # Save and quit
+:q!    # Force quit
+```
+
+# File tree
+
+```bash
+:e.           # Show tree
+:E            # Show tree
+:Ex           # Show tree
+
+:Lex          # Show tree in a side window
+:Vex          # Show tree in a new window
+```
+
+# File navigation
+
+```bash
+vim <path>    # Open directory inside vim and select a file.
+vim <file>    # Open file directly.
+
+:e <path>     # Navigate to directory/file. Use TAB and CTRL + d to choose.
+:find <path>  # Navigate to directory/file.
+
+:jumps        # Show navigation history
+<C-o>         # Navigate back
+<C-i>         # Navigate forward
+<C-^>         # Switch between current and last navigation.
+
+<C-g>         # Show current file name
+:pwd          # Show current path
+```
+
+# Buffers
+
+File contents stored in memory. In Vim, you use the windows and tabs to view file buffers, so in reality, you just switch between buffers.
+
+```bash
+:buffers             # Show all opened buffers
+:ls                  # Show all opened buffers
+
+:bprev               # Previous buffer
+:bnext               # Next buffer
+
+:b <buffer-name>     # Show specific buffer. Use tab to autocomplete.
+
+:bufdo               # Execute command over all buffers
+```
+
+# path
+
+When using `**/*`, it means:
+
+-   `**` - Look inside all directories from where I am.
+-   `/*` - Look for all files (and directories) within the directories found by `**`.
+
+# :e vs :find
+
+`:find` search the `'path'` in vim. Whereas `:edit` only takes the current working directory as the root.
+
+`:edit` is restricted by default to the working directory: if you need to edit a file that is not under your working directory you will have to provide its absolute path or a path relative to the working directory. Also, you need to provide the necessary globs.
+
+`:find` is superficially very similar to `:edit` but the (big) difference is that it finds files in the directories specified in the `path` option. `path` is what makes `:find` a lot more interesting than `:edit`.
+
+With `set path=,,` you essentially get the same behavior as `:e foo`.
+
+With `set path=**` you essentially get the same behavior as `:e **/foo` except you don't have to use any glob.
+
+With `set path=.,**` you also get access to files in the same directory as the current file.
+
+With `set path=.,**,/path/to/some/central/vendor/directory` you also get access to files from that directory… and so on.
+
+# Wildmenu
+
+Command autocompletion.
+
+```bash
+:set wildmenu           # Turns the feature on.
+
+:e string               # Search in current directory.
+:e **/*string           # Search recursively from root.
+
+<tab>                   # Show wildmenu. Go forward.
+<s-tab>                 # Go backward.
+
+<c-d>                   # Print ALL suggestions.
+
+<Left> / <Right>        # Traverse options.
+<Down> / <Up>           # Drill out/down directories.
+
+:set wildoptions=pum    # Makes the menu vertical. Traversal is reversed.
+:set wildignore+=**/node_modules/**,**/.git/** # Ignore directories
+:set wildignorecase     # Case insensitive
+```
+
+Wldignore is only applied after the search.
+
+# Motions
+
+All of these can be used in **visual (selection)** mode too.
+
+Motions are composable i.e. `5dd` and `d4j` will both delete 5 lines.
+
+```bash
+{count}{operation}{motion} # 3dw = 3 x delete word
+```
+
+```bash
+j           # Down
+k           # Up
+h           # Left (not used often)
+l           # Right (not used often)
+
+w           # Jump one word/delimitation.
+W           # Jump to next whitespace
+e           # End of word.
+b           # Back one word.
+
+_           # Jump to first non-whitespace character in line
+^           # Beginning of line.
+0           # Beginning of line.
+$           # End of line.
+
+f + char    # Jump to first character in line. F is reversed.
+t + char    # Jump to before first character in line. T is reversed.
+;           # Next occurrence of character.
+,           # Previous occurrence of character.
+
+gg          # Beginning of file.
+G           # End of file.
+nG          # Jump to line n.
+
+[ + tag     # Jump to surrounding tag i.e. ), }, ].
+%           # Jump to next closest tag i.e. ), }, ].
+o           # Jump between start/end of selection to expand.
+
+<C-d>       # Jump down by half page
+<C-u>       # Jump up by half page
+
+<C-i>       # Jump to previous position
+<C-o>       # Jump to next position
+
+}           # Jump to next block/paragraph
+```
+
+# Editing
+
+```bash
+i           # Inserting with cursor on inside i.e prepend.
+I           # Inserting with cursor at begining of line.
+
+a           # Inserting with cursor on outside i.e. append.
+A           # Inserting with cursor at end of line.
+
+c + motion  # Change value in selection ex. cw, c_, ci, ca...
+
+C           # Delete after cursor + insert mode
+cc          # Delete line + insert mode
+
+o           # Create new line under cursor + insert mode.
+O           # Create new line above cursor + insert mode.
+
+x           # Delete character.
+X           # Backspace.
+
+s           # Delete single character + insert mode
+S           # Delete whole line from indent + insert mode
+
+r + char    # Change character under cursor without INS mode.
+
+<C-a>       # Increment number.
+<C-x>       # Decrement number.
+```
+
+# Selection
+
+```bash
+o       # Switch between start/end of selection.
+
+*       # Search forward for word under cursor
+gn      # Search forward for word under cursor
+
+\#      # Search backward for word under cursor
+
+viw     # Select whole word.
+viW     # Select every character between whitespaces.
+
+vi`     # Select everything inside ``.
+xi(     # Delete everything inside ().
+di[     # Cut (Delete) everything inside [].
+ci{     # Delete (Change) + insert mode inside {}.
+cib     # Delete (Change) + insert mode inside block i.e ().
+
+va{     # Select outside {}.
+
+Esc v   # visual mode for selection.
+<C-v>   # block selection i.e. multi-line column, good for commenting.
+
+I + text + esc # Multi line insertion.
+
+'<      # Text representation for start of selection.
+'>      # Text representation for end of selection.
+```
+
+# Copy and Paste
+
+Enter **visual mode** and select text.
+
+```bash
+right click  # Paste from system clipboard (insert mode)
+
+:set paste + <S-i> # Formatted paste
+
+y            # Copy (yank) selected.
+
+d            # Cut selected.
+D            # Cut to the right of cursor, same as d$
+
+p            # Paste after cursor/line.
+P            # Paste before cursor/line.
+
+x            # Delete selecttion/charcater.
+
+yy           # Copy (yank) line in normal mode.
+dd           # Cut line in normal mode. (Shift + d)
+
+dg           # Delete to end of file.
+
+:reg         # Register i.e. list of yanks and deletions
+```
+
+# Indentation
+
+```bash
+>>      # Add indentation.
+<<      # Remove indentantion.
+
+<C-t>   # Add indentation at start of line (insert mode).
+<C-d>   # Remove indentation at start of line (insert mode).
+
+==      # Try to indent as best as possible (visual).
+```
+
+# Autocomplete
+
+```bash
+# Insert mode
+
+:h ins-completion       # Manual
+
+<C-n>                   # Next suggestion
+<C-p>                   # Previous suggestion
+
+<C-x><C-n>              # Next suggestion
+<C-x><C-p>              # Previous suggestion
+
+<C-x><C-f>              # Complete path
+<C-x><C-l>              # Complete line
+
+# Omnicomplete - language specific
+
+<C-x><C-o>              # Show suggestions
+
+:set omnifunc=javascriptcomplete#CompleteJS
+:set omnifunc=htmlcomplete#CompleteTags
+:set omnifunc=csscomplete#CompleteCSS
+```
+
+# Search
+
+Case SENSITIVE. Use `:set ignorecase` for insensitive.
+
+Some characters are treated as regex, so they need to be escaped with `\`.
+
+```bash
+/ + string    # Search for string forwards.
+? + string    # Search for string backwards.
+
+n    # Next occurrence of string under cursor (Works without searching)
+N    # Previous occurrence of string under cursor Works without searching
+
+grep foo \**/*js    # Every single files that ends with `.js`
+```
+
+# Replace
+
+```bash
+:s/text/replacement        # Only first occurence.
+:s/text/replacement/g      # Every occurence in line.
+
+:%s/text/replacement/g     # Every occurence in file.
+:%s/text/replacement/gc    # Every occurence in file, confirmation for each.
+
+v + select + : + s/text    # Only in selected range.
+
+&                          # Repeat replace for string under cursor. (n + &)
+g&                         # Repeat replace for all
+```
+
+# Global replace
+
+```bash
+:vim foo **/*
+:cfdo %s/oldstring/newstring/gc | update
+```
+
+`:vim` (short for `:vimgrep`) builds quickfix with all findings, and then `:cfdo` edits each item in the list.
+
+-   `gc` flag asks for confirmation before each change.
+-   `ge` flag avoids errors on no matches.
+-   `update` writes only changed buffers.
+
+# Multiple selection
+
+Tries to simulate `CTRL` + `d` (find duplicate) functionality.
+
+```bash
+# 1. Go to top of file.
+gg
+
+# 2. Search
+/foo
+
+# 3. Edit
+i / a / c       # Edit however you want ex. "cgn" change first from top.
+
+# 4. Jump to next occurence
+n
+
+# 5. Repeat last edit
+.
+```
+
+Another approach
+
+```bash
+# 1. Change any occurence
+i / a / c
+
+# 2. Apply change to all other occurences
+:g/foo/norm .
+
+:g/foo/   # Repeat command on every line that has foo.
+norm .    # Execute the normal mode command . (repeats the last change)
+```
+
+# grep
+
+Search for text inside of currently open file, or specified files.
+
+The search is relative to where vim was opened. You can either specify search paths, or just open root project directories instead of files directly.
+
+```bash
+:grep              # External (terminal) search
+
+:vimgrep           # Internal (vim) search, add to quickfix list
+:vim               # Internal (vim) search, add to quickfix list
+
+:vim foo           # Search for ANY foo
+:vim / foo /       # Search for JUST foo with spaces around (regex)
+
+:vim foo           # Current file, first occurence
+:vim /foo/г        # Current file, every occurence
+
+:vim foo *         # Current directory
+:vim foo **        # Current directory and subdirectories
+:vim foo **/*      # Current directory and subdirectories
+:vim foo **/*js    # Current directory and subdirectories only in js files
+
+:vim /foo/g ~/bar.js ~/baz.js   # Every foo in these files
+:vim foo app/src/**/*.js        # Every foo in specific directory and files
+```
+
+# Quickfix List
+
+This is a list with your `vimgrep` search results.
+
+```bash
+:vim foo **       # Current directory and subdirectories
+
+:copen            # Show list
+:cclose           # Close list
+:ccl              # Close list
+
+# Navigate while inside of window (<C-w> jk to selct window)
+
+j            # Show next result.
+k            # Show previous result.
+
+# Navigate while outside of window
+
+:cnext            # Show next result. Remap to <C-j>.
+:cprev            # Show previous result. Remap to <C-k>.
+
+# Previous lists. Up to 10 saved.
+
+:colder           # Previous list
+:cnewer           # Next list
+
+# Perform an action/macro on the list
+
+:cdo command      # Run on every match individually in the quickfix list.
+:cfdo command     # Run on the entire file containing a match in the quickfix list.
+:wa               # Save changes
+```
+
+**Example**
+
+```bash
+:vimgrep foo %           # Find foo in current file, put results in quickfix list
+:copen                   # Open the quickfix list
+:cfdo %s/foo/bar/g       # Apply search and replace to every list item
+```
+
+# Commenting
+
+```bash
+<C-v>        # Enter visial block mode
+jk / }       # Go up/down or jump to end of block
+I            # Insert at beginning of line
+//           # Add commenting characters
+ESC          # Apply to all lines
+```
+
+# Macros
+
+Replay keystrokes.
+
+```bash
+q + char    # Start recording, ex. q + a
+q           # Stop recording
+@char       # Execute macro, ex. @a
+
+:reg        # List of macros.
+```
+
+# Register
+
+A key value store. Macros are stored here, can be edited.
+
+```bash
+# \" is an escaped "
+
+\"a       # Access register for a
+\"b       # Access register for b
+
+\"ay      # Copy into register a
+\"by      # Copy into register b
+
+\"ap      # Paste from register a
+\"bp      # Paste from register b
+
+\"+       # System clipboard
+\"_       # Void register i.e. dev/null
+```
+
+# Windows
+
+```bash
+<C-w>           # Window commands/mode.
+<C-o>           # Close all windows.
+
+<C-w> w         # Cycle through open windows.
+<C-w> <C-w>:    # Cycle through open windows.
+
+<C-w> s         # Split the current window horizontally.
+<C-w> v         # Split the current window vertically.
+
+<C-w> c         # Close the current window.
+<C-w> o         # Close all other windows except the current one.
+
+<C-w> h         # Move to the window on the left.
+<C-w> j         # Move to the window below.
+<C-w> k         # Move to the window above.
+<C-w> l         # Move to the window on the right.
+
+<C-w> q         # Quit the current window.
+
+<C-w> =         # Make all windows equal size.
+<C-w> _         # Maximize the current window height.
+<C-w> |         # Maximize the current window width.
+
+<C-w> +         # Increase the height of the current window.
+<C-w> -         # Decrease the height of the current window.
+<C-w> >         # Increase the width of the current window.
+<C-w> <         # Decrease the width of the current window.
+```
+
+# Tabs/panes
+
+```bash
+:tabe FILEPATH    # Open file in new tab
+
+gt                # Next tab
+gT                # Previous tab
+
+:tabn             # Next tab
+:tabp             # Previous tab
+```
+
+# Terminal
+
+```bash
+:term            # Open terminal in new window
+
+! <command>      # Run a command and minimize terminal
+
+<C-z>            # Suspend vim i.e. show terminal
+fg + Enter       # Open back vim
+
+:sh              # Suspend vim i.e. show terminal
+exit             # Open back vim
+```
+
+# Marks (bookmarks)
+
+```bash
+m + letter a-z   # Adds mark on current position
+' + letter a-z   # Jumps to the line of the marked position
+` + letter a-z   # Jumps to the character of the marked position
+
+:delmarks a-z    # Delete all bookmarks
+```
+
+Ex. `ma` and `ms`, and then `'a` and `'s` to jump between the two marks.
+
+# Source/Reload configuration
+
+```bash
+:so %     # % refers to the current file
+```
+
+There are also special directories that auto-source.
+
+# Remapping
+
+**BE CAREFUL** not to remap important keys.
+
+**Always have a `leader` key** i.e. A small pause that lets you execute a shortcut before the keys do their default behavior.
+
+```bash
+# Setup a show filetree shortcut
+let mapleader = " "            # Sets <space> as a command activator
+nnoremap <leader>tr :Vex<CR>   # Pressing space + tr executes :Vex + Enter (filetree)
+
+n      # Mode where it works (normal mode)
+nore   # No recursive execution i.e. prevent remaps activating other remaps
+map    # Mapping left:right (replace left with right command)
+```
+
+# Customization
+
+They can be done in 2 ways:
+
+1. Inside `vim` with `:set` ex. `:set number`. (non-persistent)
+2. Via a `.vimrc` file. (persisted)
+
+The global `.vimrc` file is located in `/etc/vim/vimrc` or `/etc/vimrc`.
+
+You should create a local `.vimrc` file in the `home` directory for customizations.
+
+When vim is opened, it will automatically check the current user's home directory for a `.vimrc` file. All settings specified in this file will override the global settings.
+
+**Useful settings**
+
+```vim
+set scrolloff=8      " Screen auto-scrolls to follow you, avoid recentering.
+set number           " Show line numbers.
+set relativenumber   " Line numbers are relative to the current line.
+
+set cursorline       " Highlight current line/row (:set nocursorline)
+set cursorcolumn     " Highlight current column (:set nocursorline)
+
+set nocompatible     " Set compatibility to Vim only.
+set visualbell	     " Use visual bell (no beeping)
+set wrap             " Word wrap.
+
+set autoindent	     " Auto-indent new lines
+set shiftwidth=4     " Number of auto-indent spaces
+set smartindent	     " Enable smart-indent
+set smarttab	     " Enable smart-tabs
+set softtabstop=4    " TAB is 4 spaces.
+set expandtab        " Converts tabs into spaces.
+set tabstop=4        " Converts tabs into spaces.
+
+set t_u7=            " Fix where vim starts in replace mode.
+```
+
+**NOTE:**
+
+-   Commenting in `.vimrc` files is done with a single `" ` character (no closing).
+
+# Plugins
+
+> You can write your own plugins with Lua or VimL.
+
+### 1. Install `vim-plug` plugin manager
+
+A community made [plugin manager](https://github.com/junegunn/vim-plug) that uses only github repos specifically made to work with vim.
+
+```bash
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+```
+
+Needs a vim reload.
+
+### 2. Add plugins
+
+Example for [fzf - fuzzy finder](https://github.com/junegunn/fzf.vim) plugin.
+
+Add to `~/.vimrc` file.
+
+```bash
+call plug#begin()
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+call plug#end()
+```
+
+### 3. Source/reload `vimrc`
+
+```
+:so ~/.vimrc
+```
+
+### 4. Install the plugins
+
+```bash
+:PlugInstall
+```
+
+### 5. Add shortcuts i.e. remaps
+
+```bash
+nnoremap <C-p> :GFiles<CR>        # <C-p> to start fuzzy finder
+nnoremap <leader>pf :Files<CR>    # SPACE + pf for another way
+```
+
+### 6. Delete plugins
+
+Remove plugin from `~/.vimrc`.
+
+```bash
+:PlugClean
+```
+
+# Useful plugins
+
+-   https://github.com/junegunn/vim-plug
+-   https://github.com/junegunn/fzf.vim
+-   https://github.com/yegappan/lsp
+-   https://github.com/sheerun/vim-polyglot
+-   https://github.com/joshdick/onedark.vim
+-   https://github.com/vim-airline/vim-airline
+-   https://github.com/rstacruz/vim-closer
+-   https://github.com/junegunn/rainbow_parentheses.vim
+-   https://github.com/mattn/emmet-vim
+-   https://github.com/ap/vim-css-color
+
+# Language Server Protocol (LSP)
+
+Handles the communication between an editor (client) and a specific language server, in order to provide functionalities like auto-complete, linting, hovering, jump-to-definitions etc.
+
+# Utilities
+
+**Asynchronous Lint Engine (ALE)**
+
+https://github.com/w0rp/ale
+
+```bash
+# Using vim-plug
+Plug 'dense-analysis/ale'
+
+# Manual
+mkdir -p ~/.vim/pack/git-plugins/start
+git clone --depth 1 https://github.com/dense-analysis/ale.git ~/.vim/pack/git-plugins/start/ale
+```
+
+Others:
+
+-   https://github.com/neoclide/coc.nvim
+-   https://github.com/prabirshrestha/vim-lsp
+-   https://github.com/natebosch/vim-lsc
+-   https://github.com/autozimu/LanguageClient-neovim
+
+# vimrc example
+
+```vim
+" SETTINGS ========================================================================
+
+set nocompatible     " Set compatibility to Vim only.
+set path+=**         " Find searches recursively in subdirectories.
+
+set wildmenu         " Show command autocompletion suggestions.
+set wildoptions=pum  " Vertical wildmenu
+set wildignorecase   " Case insensitive
+set wildignore+=**/node_modules/**,**/.git/**  " Ignore directories
+
+set scrolloff=8      " Screen auto-scrolls to follow you, avoid recentering.
+set number           " Show line numbers.
+set relativenumber   " Line numbers are relative to the current line.
+set hlsearch         " Highligt searches
+
+set visualbell       " Use visual bell (no beeping)
+set wrap             " Word wrap.
+
+set autoindent       " Auto-indent new lines
+set shiftwidth=4     " Number of auto-indent spaces
+set smartindent      " Enable smart-indent
+set smarttab         " Enable smart-tabs
+set softtabstop=4    " TAB is 4 spaces.
+set expandtab        " Converts tabs into spaces.
+set tabstop=4        " Converts tabs into spaces.
+
+set laststatus=2     " Always show status line
+
+set t_u7=            " Fix buy where vim starts in replace mode.
+
+set completeopt+=menuone     " Always show autocompletion
+set completeopt+=noselect    " Manual selection required
+
+filetype plugin on   " Detect filetypes and load relevant plugins.
+
+" set cursorcolumn     " Show vertical line to locate cursor.
+" set cursorline       " Show horizontal line to locate cursor.
+
+" PLUGINS ========================================================================
+
+call plug#begin()
+
+" Themes
+Plug 'tomasiser/vim-code-dark'
+
+" Interface
+Plug 'vim-airline/vim-airline'
+" Plug 'blueyed/vim-diminactive'
+
+" Syntax hihglighting
+Plug 'pangloss/vim-javascript'
+Plug 'evanleck/vim-svelte'
+
+" Functionality
+" Plug 'lifepillar/vim-mucomplete'
+" Plug 'mg979/vim-visual-multi'
+" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+" Plug 'junegunn/fzf.vim'
+
+" Formatting
+" Plug 'prettier/vim-prettier', { 'do': 'yarn install --frozen-lockfile --production' }
+
+call plug#end()
+
+" PLUGIN SETTINGS =======================================================================
+
+" let g:mucomplete#enable_auto_at_startup = 1
+
+colorscheme codedark
+
+" REMAPS ========================================================================
+
+" nnoremap oo o<ESC>
+" nnoremap OO O<ESC>
+
+nnoremap <C-j> :cnext<CR>
+nnoremap <C-k> :cprev<CR>
+
+noremap <Up> <nop>
+noremap <Down> <nop>
+noremap <Left> <nop>
+noremap <Right> <nop>
+
+" noremap <C-p> :Files<CR>
+```
+
+# Cheat sheet
+
+![](../../pics/vim/vim_graphical_cheat_sheet.jpg)

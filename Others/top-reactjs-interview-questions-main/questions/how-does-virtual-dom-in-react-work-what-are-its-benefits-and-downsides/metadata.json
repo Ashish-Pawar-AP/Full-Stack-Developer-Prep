@@ -1,0 +1,16 @@
+{
+  "slug": "how-does-virtual-dom-in-react-work-what-are-its-benefits-and-downsides",
+  "languages": [],
+  "companies": [],
+  "access": "free",
+  "duration": 5,
+  "published": true,
+  "featured": true,
+  "category": "react",
+  "topics": ["react"],
+  "frameworks": ["react"],
+  "importance": "high",
+  "ranking": 460,
+  "difficulty": "hard",
+  "section": "internals"
+}

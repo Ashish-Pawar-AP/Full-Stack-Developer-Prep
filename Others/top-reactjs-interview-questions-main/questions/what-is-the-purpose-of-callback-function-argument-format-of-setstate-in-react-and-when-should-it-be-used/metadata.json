@@ -1,0 +1,16 @@
+{
+  "slug": "what-is-the-purpose-of-callback-function-argument-format-of-setstate-in-react-and-when-should-it-be-used",
+  "languages": [],
+  "companies": [],
+  "access": "free",
+  "duration": 5,
+  "published": true,
+  "featured": true,
+  "category": "react",
+  "topics": ["react"],
+  "frameworks": ["react"],
+  "importance": "low",
+  "ranking": 120,
+  "difficulty": "medium",
+  "section": "hooks"
+}

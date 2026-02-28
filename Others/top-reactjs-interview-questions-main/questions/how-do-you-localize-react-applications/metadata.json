@@ -1,0 +1,16 @@
+{
+  "slug": "how-do-you-localize-react-applications",
+  "languages": [],
+  "companies": [],
+  "access": "free",
+  "duration": 5,
+  "published": true,
+  "featured": true,
+  "category": "react",
+  "topics": ["react", "i18n"],
+  "frameworks": ["react"],
+  "importance": "low",
+  "ranking": 300,
+  "difficulty": "medium",
+  "section": "advanced"
+}
